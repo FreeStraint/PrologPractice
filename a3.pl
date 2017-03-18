@@ -34,19 +34,48 @@ xunique([],X,X).
 
 /**
 #3 xdiff
-# xdiff([a,b,f,c,d],[e,b,a,c],L) should return L=[f,d], 
-# xdiff([p,u,e,r,k,l,o,a,g],[n,k,e,a,b,u,t],L) should return L = [p,r,l,o,g], 
-# xdiff([],[e,b,a,c],L) should return L = [].
+xdiff([a,b,f,c,d],[e,b,a,c],L) should return L=[f,d], 
+xdiff([p,u,e,r,k,l,o,a,g],[n,k,e,a,b,u,t],L) should return L = [p,r,l,o,g], 
+xdiff([],[e,b,a,c],L) should return L = [].
 
+Use subtract to get the set differences
 */
+
+xdiff(L1, L2, L):- subtract(L1, L2, L).
 
 /**
 #4 removeLast
-# xdiff([a,b,f,c,d],[e,b,a,c],L) should return L=[f,d], 
-# xdiff([p,u,e,r,k,l,o,a,g],[n,k,e,a,b,u,t],L) should return L = [p,r,l,o,g], 
-# xdiff([],[e,b,a,c],L) should return L = [].
+removeLast([a,c,a,d], L1, Last) should return L1 = [a,c,a], Last = d, 
+removeLast([a,c,a,d], L1, d) should return L1 = [a,c,a], 
+removeLast([a,c,a,d], L1, [d]) should return false (why?), 
+removeLast([a], L1, Last) should return L1 = [], Last = a, 
+removeLast([[a,b,c]], L1, Last) should return L1 = [], Last = [a,b,c].
+
+on the last element, L will be [], and first element will be Last
+if not the last element, remove the first element of L1 and L2
 */
+
+removeLast([F|R], R, F):- R=[].
+removeLast([F|R1], [F|R2], Last):- removeLast(R1, R2, Last).
 
 /**
 #5clique
+
+node(a).
+node(b).
+node(c).
+node(d).
+node(e).
+
+edge(a,b).
+edge(b,c).
+edge(c,a).
+edge(d,a).
+edge(a,e).
 */
+
+xsubset([], _).
+xsubset([X|Xs], Set) :- xappend(_, [X|Set1], Set), xsubset(Xs, Set1).
+
+xappend([], L, L).
+xappend([H|T], L, [H|R]) :- xappend(T, L, R).
