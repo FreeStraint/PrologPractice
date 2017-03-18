@@ -74,6 +74,8 @@ edge(d,a).
 edge(a,e).
 */
 
+clique(L) :- findall(X,node(X),Nodes), xsubset(L,Nodes), allConnected(L).
+
 xsubset([], _).
 xsubset([X|Xs], Set) :- xappend(_, [X|Set1], Set), xsubset(Xs, Set1).
 
