@@ -105,8 +105,8 @@ allConnected([A|L]) if A is connected to every node in L and allConnected(L). Th
 allConnected([A|L]):- connect(A,L), allConnected(L) .
 allConnected([]).
 
-connect(A, [L1|L]):- edge(A,L1), connect(A, L).
-connect(A, [L1|L]):- edge(L1,A), connect(A, L).
+connect(A, [L|L1]):- edge(A,L), connect(A, L1).
+connect(A, [L|L1]):- edge(L,A), connect(A, L1).
 connect(_, []).
 
 /*
@@ -125,11 +125,11 @@ maxclique(0,Cliques) returns Cliques = []
 */
 
 maxclique(N, Cliques):- number(N),
-						findall(X, findCliqueLargerThan(N, X), T),
-						findall(M, findMaxClique(M, T), T1),
-						findall(G, checkLength(G, N, T1), Cliques).
+						findall(A, findCliqueLargerThan(N, A), T),
+						findall(B, findMaxClique(B, T), T1),
+						findall(C, checkLength(C, N, T1), Cliques).
 
-%find all list that has a size greater than size N
+%find cliques list that has a size greater than size N
 findCliqueLargerThan(N, L):- clique(L), length(L, C), C>=N.
 
 /*
