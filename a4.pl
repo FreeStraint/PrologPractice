@@ -2,6 +2,8 @@
 CMPUT325 Assignment4
 Name:
 CCID:
+
+Able to pass all test cases, collaborate with Mingjun Zhao
 */
 
 :- use_module(library(clpfd)).
@@ -53,30 +55,39 @@ disarmSelect will first select two element from Adivisions and select one elemnt
 If found, continue on rest of the list
 If not found, then select one element from Adivisions and select two elements from Bdivisions
 If not found, return false
+
+Add strength variable, the current pair strength must be greater than the next pair, thus when inserting, the current pair will be insert later
+than the next pair, to make the solution sorted
+
 */									 
 
-disarm(Adivisions, Bdivisions, Solution):- sum(Adivisions, X), sum(Bdivisions, X), disarmSelect(Adivisions, Bdivisions, Solution).
+disarm(Adivisions, Bdivisions, Solution):- sum(Adivisions, X), sum(Bdivisions, X), disarmSelect(Adivisions, Bdivisions, Solution,0).
 
-disarmSelect(Adivisions, Bdivisions, Solution):-
+disarmSelect(Adivisions, Bdivisions, Solution, Strength):-
 				Vars = [A,B,C],
 				select(A, Adivisions, A1),
 				select(B, A1, A2),
 				select(C, Bdivisions, B1),
-				A #=< B, A + B #= C,
-				disarmSelect(A2,B1,S1),
+				A #=< B,
+				A + B #= C, 
+				Strength #=< C,
+				disarmSelect(A2,B1,S1,C),
 				append([[[A,B],C]], S1, Solution),
 				label(Vars).
 
-disarmSelect(Adivisions, Bdivisions, Solution):-
+disarmSelect(Adivisions, Bdivisions, Solution, Strength):-
 				Vars = [A,B,C],
 				select(A, Adivisions, A1),
 				select(B, Bdivisions, B1),
 				select(C, B1, B2),
-				B #< C, B + C #= A,
-				disarmSelect(A1, B2, S1),
+				B #=< C,
+				B + C #= A, 
+				Strength #=< A ,
+				disarmSelect(A1, B2, S1, A),
 				append([[A,[B,C]]], S1, Solution),
 				label(Vars).
-disarmSelect([],[],[]).
+
+disarmSelect([],[],[],_).
 
 sum([], 0).
 sum([A|L], X):- sum(L, X1), X is A + X1.
